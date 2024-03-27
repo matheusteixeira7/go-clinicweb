@@ -1,18 +1,16 @@
-version: '3'
+version: "3"
 
 services:
-  mysql:
-    image: mysql:5.7
-    container_name: mysql
+  mongo:
+    image: mongo
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: orders
-      MYSQL_PASSWORD: root
+      MONGO_INITDB_ROOT_USERNAME: clinicweb
+      MONGO_INITDB_ROOT_PASSWORD: clinicweb
     ports:
-      - 3306:3306
+      - 27017:27017
     volumes:
-      - .docker/mysql:/var/lib/mysql
+      - ./data:/.docker/data/db
 
   rabbitmq:
     image: rabbitmq:3-management

@@ -3,12 +3,15 @@ package entity
 import (
 	"clinicweb/pkg/entity"
 	"errors"
+	"time"
 )
 
 type Doctor struct {
 	ID        entity.ID `json:"id"`
 	Name      string    `json:"name"`
 	Specialty string    `json:"specialty"`
+	CreatedAt int64     `json:"created_at"`
+	UpdatedAt int64     `json:"updated_at"`
 }
 
 var (
@@ -21,6 +24,8 @@ func NewDoctor(name, specialty string) (*Doctor, error) {
 		ID:        entity.NewID(),
 		Name:      name,
 		Specialty: specialty,
+		CreatedAt: time.Now().Unix(),
+		UpdatedAt: time.Now().Unix(),
 	}
 	err := doctor.Validate()
 	if err != nil {

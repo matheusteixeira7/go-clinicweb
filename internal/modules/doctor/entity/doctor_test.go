@@ -12,6 +12,8 @@ func TestNewDoctor(t *testing.T) {
 	assert.Equal(t, "John Doe", doctor.Name)
 	assert.Equal(t, "General Physician", doctor.Specialty)
 	assert.NotEmpty(t, doctor.ID)
+	assert.NotZero(t, doctor.CreatedAt)
+	assert.NotZero(t, doctor.UpdatedAt)
 
 	_, err = NewDoctor("", "General Physician")
 	assert.NotNil(t, err)

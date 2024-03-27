@@ -2,12 +2,11 @@ package main
 
 import (
 	"clinicweb/configs"
+	"clinicweb/internal/infra/database"
 	"clinicweb/internal/infra/web/webserver"
-	"database/sql"
 	"fmt"
+	"log"
 	"net/http"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
@@ -15,15 +14,19 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	db, err := sql.Open(configs.DBDriver, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", configs.DBUser, configs.DBPassword, configs.DBHost, configs.DBPort, configs.DBName))
+	_, err = database.InitDatabaseClient(configs.MongoDBUri)
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
-	webserver := webserver.NewWebServer(configs.WebServerPort)
+
+	webServerPort := configs.WebServerPort
+	if webServerPort == "" {
+		log.Fatal("You must set your 'WEB_SERVER_PORT' environment variable.")
+	}
+	webserver := webserver.NewWebServer(webServerPort)
 	webserver.AddHandler("/ping", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("pong"))
 	})
-	fmt.Println("Starting web server on port", configs.WebServerPort)
+	fmt.Println("Starting web server on port", webServerPort)
 	webserver.Start()
 }
