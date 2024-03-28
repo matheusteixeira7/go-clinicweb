@@ -18,7 +18,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
 	webServerPort := configs.WebServerPort
 	if webServerPort == "" {
 		log.Fatal("You must set your 'WEB_SERVER_PORT' environment variable.")

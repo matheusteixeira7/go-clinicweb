@@ -7,11 +7,11 @@ import (
 )
 
 type Doctor struct {
-	ID        entity.ID `json:"id"`
-	Name      string    `json:"name"`
-	Specialty string    `json:"specialty"`
-	CreatedAt int64     `json:"created_at"`
-	UpdatedAt int64     `json:"updated_at"`
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	Specialty string `json:"specialty"`
+	CreatedAt int64  `json:"created_at"`
+	UpdatedAt int64  `json:"updated_at"`
 }
 
 var (
@@ -21,7 +21,7 @@ var (
 
 func NewDoctor(name, specialty string) (*Doctor, error) {
 	doctor := &Doctor{
-		ID:        entity.NewID(),
+		ID:        entity.NewID().String(),
 		Name:      name,
 		Specialty: specialty,
 		CreatedAt: time.Now().Unix(),

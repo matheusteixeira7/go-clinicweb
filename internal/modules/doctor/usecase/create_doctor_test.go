@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	doctorEntity "clinicweb/internal/modules/doctor/entity"
+	"clinicweb/internal/modules/doctor/entity"
 	"errors"
 	"testing"
 
@@ -13,7 +13,12 @@ type MockDoctorRepository struct {
 	mock.Mock
 }
 
-func (m *MockDoctorRepository) Save(doctor *doctorEntity.Doctor) error {
+func (m *MockDoctorRepository) FindById(id string) (*entity.Doctor, error) {
+	args := m.Called(id)
+	return args.Get(0).(*entity.Doctor), args.Error(1)
+}
+
+func (m *MockDoctorRepository) Save(doctor *entity.Doctor) error {
 	args := m.Called(doctor)
 	return args.Error(0)
 }
@@ -33,7 +38,7 @@ func TestCreateDoctorUseCase_Execute_Fail(t *testing.T) {
 
 	assert.NotNil(t, err)
 	assert.Nil(t, output)
-	assert.Equal(t, doctorEntity.ErrDoctorNameEmpty, err)
+	assert.Equal(t, entity.ErrDoctorNameEmpty, err)
 
 	input = CreateDoctorInputDTO{
 		Name:      "John Doe",
@@ -44,7 +49,7 @@ func TestCreateDoctorUseCase_Execute_Fail(t *testing.T) {
 
 	assert.NotNil(t, err)
 	assert.Nil(t, output)
-	assert.Equal(t, doctorEntity.ErrDoctorSpecialtyEmpty, err)
+	assert.Equal(t, entity.ErrDoctorSpecialtyEmpty, err)
 }
 
 func TestCreateDoctorUseCase_Execute_ReturnsError(t *testing.T) {

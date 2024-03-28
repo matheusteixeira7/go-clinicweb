@@ -3,6 +3,7 @@ package configs
 import "github.com/spf13/viper"
 
 type conf struct {
+	GoEnv             string `mapstructure:"GO_ENV"`
 	MongoDBUri        string `mapstructure:"MONGODB_URI"`
 	WebServerPort     string `mapstructure:"WEB_SERVER_PORT"`
 	GRPCServerPort    string `mapstructure:"GRPC_SERVER_PORT"`

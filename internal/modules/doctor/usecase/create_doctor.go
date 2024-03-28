@@ -1,6 +1,9 @@
 package usecase
 
-import "clinicweb/internal/modules/doctor/entity"
+import (
+	"clinicweb/internal/modules/doctor/entity"
+	"clinicweb/internal/modules/doctor/infra/repository"
+)
 
 type CreateDoctorInputDTO struct {
 	Name      string `json:"name"`
@@ -16,10 +19,10 @@ type CreateDoctorOutputDTO struct {
 }
 
 type CreateDoctorUseCase struct {
-	repository entity.DoctorRepositoryInterface
+	repository repository.DoctorRepositoryInterface
 }
 
-func NewCreateDoctorUseCase(repository entity.DoctorRepositoryInterface) *CreateDoctorUseCase {
+func NewCreateDoctorUseCase(repository repository.DoctorRepositoryInterface) *CreateDoctorUseCase {
 	return &CreateDoctorUseCase{
 		repository: repository,
 	}
@@ -34,7 +37,7 @@ func (c *CreateDoctorUseCase) Execute(input CreateDoctorInputDTO) (*CreateDoctor
 		return nil, err
 	}
 	return &CreateDoctorOutputDTO{
-		ID:        doctor.ID.String(),
+		ID:        doctor.ID,
 		Name:      doctor.Name,
 		Specialty: doctor.Specialty,
 		CreatedAt: doctor.CreatedAt,
