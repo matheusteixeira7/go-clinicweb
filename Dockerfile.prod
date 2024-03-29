@@ -1,0 +1,10 @@
+FROM golang:1.22-alpine as base
+WORKDIR /usr/src
+COPY . .
+ENV CGO_ENABLED=0
+RUN GOOS=linux go build ./cmd/server
+
+FROM scratch
+WORKDIR /usr/src
+COPY --from=base /usr/src/main .
+CMD ["/usr/src/main"]

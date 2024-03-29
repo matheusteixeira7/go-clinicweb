@@ -4,6 +4,14 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/data" />
+      <excludeFolder url="file://$MODULE_DIR$/rabbitmq_data/mnesia/rabbit@198b0b085e66-plugins-expand" />
+      <excludeFolder url="file://$MODULE_DIR$/rabbitmq_data/mnesia/rabbit@519e24e1738f-plugins-expand" />
+      <excludeFolder url="file://$MODULE_DIR$/rabbitmq_data/mnesia/rabbit@622f78e5fc51-plugins-expand" />
+      <excludeFolder url="file://$MODULE_DIR$/rabbitmq_data/mnesia/rabbit@81a75a981d86-plugins-expand" />
+      <excludeFolder url="file://$MODULE_DIR$/rabbitmq_data/mnesia/rabbit@88b6dddd7f83-plugins-expand" />
+      <excludeFolder url="file://$MODULE_DIR$/rabbitmq_data/mnesia/rabbit@baf1ef691708-plugins-expand" />
+      <excludeFolder url="file://$MODULE_DIR$/rabbitmq_data/mnesia/rabbit@c3de645d9ce3-plugins-expand" />
+      <excludeFolder url="file://$MODULE_DIR$/rabbitmq_data/mnesia/rabbit@d984406443f2-plugins-expand" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
