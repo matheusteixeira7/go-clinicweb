@@ -2,30 +2,35 @@ package main
 
 import (
 	"clinicweb/configs"
-	"clinicweb/internal/infra/database"
 	"clinicweb/internal/infra/web/webserver"
+	"context"
 	"fmt"
-	"log"
-	"net/http"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func main() {
-	configs, err := configs.LoadConfig(".")
+	config, err := configs.LoadConfig(".")
 	if err != nil {
 		panic(err)
 	}
-	_, err = database.InitDatabaseClient(configs.MongoDBUri)
+
+	fmt.Println("Starting server with config", config.MongoDBUri, config.MongoDBName, config.WebServerPort)
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(config.MongoDBUri))
 	if err != nil {
 		panic(err)
 	}
-	webServerPort := configs.WebServerPort
-	if webServerPort == "" {
-		log.Fatal("You must set your 'WEB_SERVER_PORT' environment variable.")
-	}
-	webserver := webserver.NewWebServer(webServerPort)
-	webserver.AddHandler("/ping", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("pong"))
-	})
-	fmt.Println("Starting web server on port", webServerPort)
-	webserver.Start()
+	defer func() {
+		if err := client.Disconnect(context.TODO()); err != nil {
+			panic(err)
+		}
+	}()
+
+	dbDoctorsCollection := client.Database(config.MongoDBName).Collection("doctors")
+	NewCreateDoctorUseCase(dbDoctorsCollection)
+	webDoctorHandler := NewWebDoctorHandler(dbDoctorsCollection)
+	web := webserver.NewWebServer(config.WebServerPort)
+	web.AddHandler("/doctors", webDoctorHandler.CreateDoctor)
+	fmt.Println("Starting web server on port", config.WebServerPort)
+	web.Start()
 }

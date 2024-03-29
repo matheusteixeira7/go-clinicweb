@@ -8,4 +8,4 @@ coverage:
 	go tool cover -html="coverage.out"
 
 dev:
-	(cd ./cmd/server && go run main.go)
+	(cd ./cmd/server && air main.go wire_gen.go)

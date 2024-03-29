@@ -1,5 +1,8 @@
 {
-  "gopls.env": {
-    "GOFLAGS": "-tags=integration"
+  "gopls": {
+    "buildFlags": [
+      "-tags=integration",
+      "-tags=wireinject"
+    ]
   }
 }

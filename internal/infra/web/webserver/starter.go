@@ -1,11 +1,11 @@
 package webserver
 
-type WebServerStarter struct {
+type Starter struct {
 	WebServer WebServer
 }
 
-func NewWebServerStarter(webServer WebServer) *WebServerStarter {
-	return &WebServerStarter{
+func NewWebServerStarter(webServer WebServer) *Starter {
+	return &Starter{
 		WebServer: webServer,
 	}
 }

@@ -30,5 +30,8 @@ func (s *WebServer) Start() {
 	for path, handler := range s.Handlers {
 		s.Router.Handle(path, handler)
 	}
-	http.ListenAndServe(s.WebServerPort, s.Router)
+	err := http.ListenAndServe(s.WebServerPort, s.Router)
+	if err != nil {
+		return
+	}
 }
