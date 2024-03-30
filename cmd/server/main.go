@@ -2,12 +2,9 @@ package main
 
 import (
 	"clinicweb/configs"
+	"clinicweb/internal/infra/database"
 	"clinicweb/internal/infra/web/webserver"
 	"context"
-	"fmt"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func main() {
@@ -16,26 +13,23 @@ func main() {
 		panic(err)
 	}
 
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(config.MongoDBUri))
+	db, err := database.InitDatabaseClient(config.MongoDBUri, config.MongoDBName)
 	if err != nil {
 		panic(err)
 	}
+
 	defer func() {
-		if err := client.Disconnect(context.TODO()); err != nil {
+		if err := db.Disconnect(context.TODO()); err != nil {
 			panic(err)
 		}
 	}()
-	var result bson.M
-	if err := client.Database(config.MongoDBName).RunCommand(context.TODO(), bson.D{{"ping", 1}}).Decode(&result); err != nil {
-		panic(err)
-	}
-	fmt.Println("Pinged your deployment. You successfully connected to MongoDB!")
 
-	dbDoctorsCollection := client.Database(config.MongoDBName).Collection("doctors")
-	NewCreateDoctorUseCase(dbDoctorsCollection)
-	webDoctorHandler := NewWebDoctorHandler(dbDoctorsCollection)
-	web := webserver.NewWebServer(config.WebServerPort)
-	web.AddHandler("/doctors", webDoctorHandler.CreateDoctor)
-	fmt.Println("Starting web server on port", config.WebServerPort)
-	web.Start()
+	done := make(chan bool)
+
+	go func() {
+		webserver.Start(config.WebServerPort, db.Database(config.MongoDBName))
+		done <- true
+	}()
+
+	<-done
 }

@@ -1,37 +1,24 @@
 package webserver
 
 import (
+	"clinicweb/internal/modules/doctor/routes"
+	"fmt"
+	"go.mongodb.org/mongo-driver/mongo"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-type WebServer struct {
-	Router        chi.Router
-	Handlers      map[string]http.HandlerFunc
-	WebServerPort string
-}
+func Start(port string, db *mongo.Database) {
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
 
-func NewWebServer(serverPort string) *WebServer {
-	return &WebServer{
-		Router:        chi.NewRouter(),
-		Handlers:      make(map[string]http.HandlerFunc),
-		WebServerPort: serverPort,
-	}
-}
+	routes.DoctorRoutes(r, db)
 
-func (s *WebServer) AddHandler(path string, handler http.HandlerFunc) {
-	s.Handlers[path] = handler
-}
-
-func (s *WebServer) Start() {
-	s.Router.Use(middleware.Logger)
-	for path, handler := range s.Handlers {
-		s.Router.Handle(path, handler)
-	}
-	err := http.ListenAndServe(s.WebServerPort, s.Router)
-	if err != nil {
-		return
+	fmt.Println("Server is running on port", port)
+	if err := http.ListenAndServe(port, r); err != nil {
+		log.Fatalf("Failed to start web server: %v", err)
 	}
 }
