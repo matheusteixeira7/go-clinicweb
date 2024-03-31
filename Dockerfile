@@ -15,4 +15,4 @@ RUN go mod download
 WORKDIR /app/cmd/server
 
 # Define o comando para executar o aplicativo
-CMD ["air", "main.go", "wire_gen.go"]
+CMD ["air", "main.go"]

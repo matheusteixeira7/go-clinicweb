@@ -1,4 +1,4 @@
-package find_doctor_by_id_usecase
+package findbyid
 
 import (
 	"clinicweb/internal/modules/doctor/entity"

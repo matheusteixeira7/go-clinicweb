@@ -62,7 +62,20 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-func TestSaveDoctor(t *testing.T) {
+func TestSaveDoctor_Fail(t *testing.T) {
+	doctor, _ := entity.NewDoctor("", "General Physician")
+	doctorRepository := NewDoctorRepository(db.Database("clinicweb").Collection("doctors"))
+	err := doctorRepository.Save(doctor)
+	assert.NotNil(t, err)
+	assert.Error(t, err)
+
+	doctor, _ = entity.NewDoctor("John Doe", "")
+	err = doctorRepository.Save(doctor)
+	assert.NotNil(t, err)
+	assert.Error(t, err)
+}
+
+func TestSaveDoctor_Success(t *testing.T) {
 	doctor, _ := entity.NewDoctor("John Doe", "General Physician")
 	doctorRepository := NewDoctorRepository(db.Database("clinicweb").Collection("doctors"))
 	err := doctorRepository.Save(doctor)
@@ -77,7 +90,16 @@ func TestSaveDoctor(t *testing.T) {
 	assert.Equal(t, doctor.UpdatedAt, foundDoctor.UpdatedAt)
 }
 
-func TestFindDoctor(t *testing.T) {
+func TestFindDoctor_Fail(t *testing.T) {
+	doctorRepository := NewDoctorRepository(db.Database("clinicweb").Collection("doctors"))
+
+	foundDoctor, err := doctorRepository.FindById("invalid_id")
+	assert.NotNil(t, err)
+	assert.Nil(t, foundDoctor)
+	assert.EqualError(t, err, "mongo: no documents in result")
+}
+
+func TestFindDoctor_Success(t *testing.T) {
 	doctor, _ := entity.NewDoctor("John Doe", "General Physician")
 	doctorRepository := NewDoctorRepository(db.Database("clinicweb").Collection("doctors"))
 	err := doctorRepository.Save(doctor)

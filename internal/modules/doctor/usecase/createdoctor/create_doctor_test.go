@@ -1,4 +1,4 @@
-package create_doctor_usecase
+package createdoctor
 
 import (
 	"clinicweb/internal/modules/doctor/entity"

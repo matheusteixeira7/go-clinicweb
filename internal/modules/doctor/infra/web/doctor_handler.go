@@ -2,8 +2,8 @@ package web
 
 import (
 	"clinicweb/internal/modules/doctor/infra/repository"
-	"clinicweb/internal/modules/doctor/usecase/create_doctor_usecase"
-	"clinicweb/internal/modules/doctor/usecase/find_doctor_by_id_usecase"
+	"clinicweb/internal/modules/doctor/usecase/createdoctor"
+	"clinicweb/internal/modules/doctor/usecase/findbyid"
 	"encoding/json"
 	"net/http"
 )
@@ -19,14 +19,14 @@ func NewWebDoctorHandler(doctorRepository repository.DoctorRepositoryInterface) 
 }
 
 func (h *DoctorHandler) CreateDoctor(w http.ResponseWriter, r *http.Request) {
-	var dto create_doctor_usecase.CreateDoctorInputDTO
+	var dto createdoctor.CreateDoctorInputDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	usecase := create_doctor_usecase.NewCreateDoctorUseCase(h.DoctorRepository)
+	usecase := createdoctor.NewCreateDoctorUseCase(h.DoctorRepository)
 	output, err := usecase.Execute(dto)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -40,14 +40,14 @@ func (h *DoctorHandler) CreateDoctor(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *DoctorHandler) FindByID(w http.ResponseWriter, r *http.Request) {
-	var dto find_doctor_by_id_usecase.FindDoctorByIdInputDTO
+	var dto findbyid.FindDoctorByIdInputDTO
 	id := r.PathValue("id")
 	if id == "" {
 		http.Error(w, "Bad Request: 'id' parameter is required", http.StatusBadRequest)
 		return
 	}
 	dto.ID = id
-	usecase := find_doctor_by_id_usecase.NewFindDoctorByIDUseCase(h.DoctorRepository)
+	usecase := findbyid.NewFindDoctorByIDUseCase(h.DoctorRepository)
 	output, err := usecase.Execute(dto)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
